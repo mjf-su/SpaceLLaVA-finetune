@@ -74,6 +74,8 @@ class DataArguments:
     is_multimodal: bool = False
     image_folder: Optional[str] = field(default=None)
     image_aspect_ratio: str = 'square'
+    validation_data_path: Optional[List[str]] = field(default=None,
+                                                      metadata={"help": "Path(s) to the validation dataset(s)."})
 
 
 @dataclass
@@ -779,9 +781,16 @@ def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
     train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
                                 data_args=data_args)
+    if data_args.validation_data_path is not None:
+        val_dataset = {pathlib.Path(validation_path).parents[1].stem + "-" + pathlib.Path(validation_path).parents[0].stem: LazySupervisedDataset(tokenizer=tokenizer,
+                                                                                                                                            data_path=validation_path,
+                                                                                                                                            data_args=data_args) for validation_path in data_args.validation_data_path}
+    else:
+        val_dataset = None
+        
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
-                eval_dataset=None,
+                eval_dataset=val_dataset,
                 data_collator=data_collator)
 
 
