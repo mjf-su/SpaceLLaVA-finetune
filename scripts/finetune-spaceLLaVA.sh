@@ -12,19 +12,19 @@ deepspeed llava/train/train_mem.py \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
     --mm_use_im_patch_token False \
-    --freeze_mm_mlp_adapter True \
+    --tune_mm_mlp_adapter True \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-$WANDB_NAME \
+    --output_dir ./checkpoints/llava-tune-mm-projector \
     --num_train_epochs 2 \
     --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 32 \
-    --gradient_accumulation_steps 1 \
+    --gradient_accumulation_steps 2 \
     --logging_strategy "steps" \
     --logging_steps 1 \
     --evaluation_strategy "steps" \
-    --eval_steps 100 \
+    --eval_steps 3000 \
     --save_strategy "epoch" \
     --learning_rate 3e-5 \
     --weight_decay 0.05 \
