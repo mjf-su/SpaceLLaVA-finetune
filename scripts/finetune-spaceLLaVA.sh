@@ -4,8 +4,8 @@ deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path liuhaotian/llava-v1.5-13b \
     --version v1 \
-    --data_path ./playground/data/train_dataset.jsonl \
-    --validation_data_path ./playground/data/ai4mars/vqa/eval_dataset.jsonl ./playground/data/ai4mars/instruction/eval_dataset.jsonl ./playground/data/scoti/vqa/eval_dataset.jsonl ./playground/data/llava_instruct/instruction/eval_dataset.jsonl \
+    --data_path ./playground/data/train_dataset.json \
+    --validation_data_path ./playground/data/ai4mars/vqa/eval_dataset.json ./playground/data/ai4mars/instruction/eval_dataset.json ./playground/data/scoti/vqa/eval_dataset.json ./playground/data/llava_instruct/instruction/eval_dataset.json \
     --image_folder ./playground \
     --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
