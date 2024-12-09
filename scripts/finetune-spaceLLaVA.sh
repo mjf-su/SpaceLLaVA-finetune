@@ -16,7 +16,7 @@ deepspeed llava/train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-tune-mm-projector \
+    --output_dir ./checkpoints/llava-tune-mm-projector-small-cotrain \
     --num_train_epochs 2 \
     --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 32 \
