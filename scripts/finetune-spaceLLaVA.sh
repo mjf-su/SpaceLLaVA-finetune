@@ -23,8 +23,8 @@ deepspeed llava/train/train_mem.py \
     --gradient_accumulation_steps 2 \
     --logging_strategy "steps" \
     --logging_steps 1 \
-    --evaluation_strategy "steps" \
-    --eval_steps 3000 \
+    --eval_strategy "steps" \
+    --eval_steps 120 \
     --save_strategy "epoch" \
     --learning_rate 3e-5 \
     --weight_decay 0.05 \
