@@ -23,6 +23,7 @@ wandb
 output
 
 checkpoints
+playground
 ckpts*
 
 .ipynb_checkpoints
