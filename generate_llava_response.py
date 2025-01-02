@@ -22,7 +22,7 @@ def eval_model(args : argparse.Namespace) -> None:
     answers_file = pathlib.Path(args.answers_file).expanduser()
     answers_file.parent.mkdir(parents = True, exist_ok = True)
     answers = json.load(open(answers_file, "r")) if answers_file.is_file() else {}
-    for line in tqdm(questions[:1000]):
+    for line in tqdm(questions):
         idx = line["id"] # unique identifier
         image_file = line["image"]
         qs = "what visual characteristics separate prominent terrain classes in this image?"

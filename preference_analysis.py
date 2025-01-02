@@ -15,7 +15,7 @@ def main(args : argparse.Namespace) -> None:
 
 RULES:
 1) In your response, you will return three scores, i.e, a PREFERENCE score, a numeric score for the response from 'STUDENT 1' and a numeric score for the response from 'STUDENT 2'.
-2) The PREFERENCE score should be as a single number corresponding to the student with the answer most similar in content and meaning to the 'GROUND-TRUTH' answer, e.g., you should return a 0 if 'STUDENT 0' is preferable to 'STUDENT 1', and conversely, you should return a 1 if 'STUDENT 1' is more preferable to 'STUDENT 0'. If both responses are indistinguishable, 
+2) The PREFERENCE score should be as a single number corresponding to the student with the answer most similar in content and meaning to the 'GROUND-TRUTH' answer, e.g., you should return a 0 if 'STUDENT 0' is preferable to 'STUDENT 1', and conversely, you should return a 1 if 'STUDENT 1' is more preferable to 'STUDENT 0'.
 3) The score you give to 'STUDENT 0' and 'STUDENT 1' should be an integer number between 0 (worst) and 100 (exemplar) reflecting the degree of similarity between the student's response with the 'GROUND-TRUTH' answer. For example, a very similar response to the ground-truth answer should receive a high score.
 4) If you are unsure which student's response is preferable or the exact numeric grade to assign either student, please use your best judgement.
 5) Give your answer in the following format:
@@ -38,10 +38,6 @@ Question: [QUESTION]
         prompt = prompt.replace("[STUDENT 0]", comparison[args.gpt_model + "-answer"] if args.compare_to_gpt else comparison["base-answer"]).replace("[STUDENT 1]", comparison["finetune-answer"])
         completion = client.chat.completions.create(
             model="gpt-4o",
-            # messages=[
-            #     {"role": "system", "content": "You will act as the judge of natural language responses from two students in planetary science. You will be presented with a 'QUESTION', the desired, 'GROUND-TRUTH' answer, and the responses from each student to be evaluated. Your job is to decide which of the two given answers is most similar to the 'GROUND-TRUTH' response based on the response's content, i.e., disregard whether a response simply has similar structure to the 'GROUND-TRUTH' answer."},
-            #     {"role": "user", "content": f"OVERVIEW: Two students in planetary science are presented with the following 'QUESTION': \"{comparison['question']}\". The desired, 'GROUND-TRUTH' response to this question is: \"{comparison['ground-truth']}\". The response from 'STUDENT 1' is \"{comparison[args.gpt_model + '-answer'] if args.compare_to_gpt else comparison['base-answer']}\" and the response from 'STUDENT 2' is \"{comparison['finetune-answer']}\". Your job is to determine which student's response is most similar to the 'GROUND-TRUTH' response. Give your answer as a single number corresponding to the student with the answer most similar in content and meaning to the 'GROUND-TRUTH' answer, e.g., you should return a 1 if 'STUDENT 1' is preferable to 'STUDENT 2', and conversely, you should return a 2 if 'STUDENT 2' is more preferable to 'STUDENT 1'. If you are unsure whether 'STUDENT 1' or 'STUDENT 2' is preferable relative to the desired, 'GROUND-TRUTH' response, then provide 0 as your answer. Finally, do not provide any justification or explanation in your answer."}
-            # ]
             messages = [
                 {"role": "system", "content": sys_message},
                 {"role": "user", "content": prompt}
