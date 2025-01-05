@@ -18,7 +18,7 @@ deepspeed llava/train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-lora-mmproj-v1 \
+    --output_dir ./checkpoints/llava-lora-mmproj-v1-0p2 \
     --num_train_epochs 4 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 16 \
@@ -26,7 +26,7 @@ deepspeed llava/train/train_mem.py \
     --logging_strategy "steps" \
     --logging_steps 1 \
     --eval_strategy "steps" \
-    --eval_steps 1000 \
+    --eval_steps 800 \
     --save_strategy "epoch" \
     --learning_rate 3e-5 \
     --weight_decay 0.05 \
