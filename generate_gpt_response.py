@@ -31,7 +31,9 @@ def main(args : argparse.Namespace) -> None:
     answers = json.load(open(answers_file, "r")) if answers_file.is_file() else {}
     for line in tqdm(questions):
         idx = line["id"] # unique identifier
-        assert idx in answers # must generate sota zero-shot answers following 
+        assert idx in answers # must generate sota zero-shot answers following
+        if args.evaluation_task and args.evaluation_task not in idx: # target a particular task if "evaluation-task" passed
+            continue 
 
         image_file = pathlib.Path(args.image_folder).expanduser() / line["image"]
         qs = answers[idx]["question"]
@@ -69,6 +71,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--question-file", type = str, default = "/SpaceLLaVA-finetune/playground/data/ai4mars/vqa/terrain_comparison/eval_dataset.json")
     parser.add_argument("--answers-file", type = str, default = "/SpaceLLaVA-finetune/playground/data/ai4mars/vqa/terrain_comparison/answer.json")
+    parser.add_argument("--evaluation-task", type = str, default = None, help = "the task within the question file, e.g., eval_dataset.json file, you wish to process.")
     parser.add_argument("--image-folder", type = str, default = "playground/")
     parser.add_argument("--model", type = str, default = "gpt-4o")
     args = parser.parse_args()
