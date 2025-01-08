@@ -14,7 +14,7 @@ def main(args : argparse.Namespace) -> None:
     user_message = """OVERVIEW: Two graduate students in planetary science are presented with an open ended 'QUESTION' which evaluates each student's ability to compare and contrast the characteristics of at least two different terrain types in a camera image of Mars' landscape. Your job is to score each student's response with a numeric grade and determine which student's response is most similar to the 'GROUND-TRUTH' response.
 
 RULES:
-1) In your response, you will return three scores, i.e, a PREFERENCE score, a numeric score for the response from 'STUDENT 1' and a numeric score for the response from 'STUDENT 2'.
+1) In your response, you will return three scores, i.e, a PREFERENCE score, a numeric score for the response from 'STUDENT 0' and a numeric score for the response from 'STUDENT 1'.
 2) The PREFERENCE score should be as a single number corresponding to the student with the answer most similar in content and meaning to the 'GROUND-TRUTH' answer, e.g., you should return a 0 if 'STUDENT 0' is preferable to 'STUDENT 1', and conversely, you should return a 1 if 'STUDENT 1' is more preferable to 'STUDENT 0'.
 3) The score you give to 'STUDENT 0' and 'STUDENT 1' should be an integer number between 0 (worst) and 100 (exemplar) reflecting the degree of similarity between the student's response with the 'GROUND-TRUTH' answer. For example, a very similar response to the ground-truth answer should receive a high score.
 4) If you are unsure which student's response is preferable or the exact numeric grade to assign either student, please use your best judgement.
