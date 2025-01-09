@@ -4,7 +4,7 @@ import numpy as np
 
 import argparse, json, re, pathlib
 
-client = OpenAI(api_key = "<API KEY HERE>")
+client = OpenAI(api_key = "<API_KEY>")
 
 def main(args : argparse.Namespace) -> None:
     with open(pathlib.Path(args.response_file).expanduser(), 'r') as f:
@@ -33,7 +33,7 @@ Question: [QUESTION]
     preference_counts = [0, 0]
     student0_scores = []
     student1_scores = []
-    for _, comparison in tqdm(answer_comparisons.items()):
+    for _, comparison in tqdm(list(answer_comparisons.items())):
         prompt = user_message.replace("[QUESTION]", comparison["question"]).replace("[GROUND-TRUTH]", comparison["ground-truth"])
         prompt = prompt.replace("[STUDENT 0]", comparison[args.gpt_model + "-answer"] if args.compare_to_gpt else comparison["base-answer"]).replace("[STUDENT 1]", comparison["finetune-answer"])
         completion = client.chat.completions.create(
@@ -53,8 +53,8 @@ Question: [QUESTION]
         except Exception:
             print(evaluation)
     print(preference_counts)
-    print(np.mean(student0_scores))
-    print(np.mean(student1_scores))
+    print(np.round(np.mean(student0_scores), 1), np.round(np.std(student0_scores), 1))
+    print(np.round(np.mean(student1_scores), 1), np.round(np.std(student1_scores), 1))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

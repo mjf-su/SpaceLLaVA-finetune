@@ -3,6 +3,7 @@ from llava.conversation import conv_templates
 from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, process_images, get_model_name_from_path
+from itertools import compress
 
 from PIL import Image
 from tqdm import tqdm
@@ -22,12 +23,11 @@ def eval_model(args : argparse.Namespace) -> None:
     answers_file = pathlib.Path(args.answers_file).expanduser()
     answers_file.parent.mkdir(parents = True, exist_ok = True)
     answers = json.load(open(answers_file, "r")) if answers_file.is_file() else {}
-    for line in tqdm(questions):
+    eval_ids = [args.evaluation_task in line["id"] for line in questions] 
+    for line in tqdm(list(compress(questions, eval_ids))):
         idx = line["id"] # unique identifier
-        if args.evaluation_task and args.evaluation_task not in idx: # target a particular task if "evaluation-task" passed
-            continue
         image_file = line["image"]
-        qs = line["prompt"]
+        qs = line["conversations"][0]["value"]
         cur_prompt = qs
         if model.config.mm_use_im_start_end:
             qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     parser.add_argument("--model-base", type=str, default=None)
     parser.add_argument("--image-folder", type=str, default="playground/")
     parser.add_argument("--conv-mode", type=str, default="llava_v1")
-    parser.add_argument("--evaluation-task", type=str, default=None, help="the task within the question file, e.g., eval_dataset.json file, you wish to process.")
+    parser.add_argument("--evaluation-task", type=str, required = True, help="the task within the question file, e.g., eval_dataset.json file, you wish to process.")
     parser.add_argument("--question-file", type=str, required = True)
     parser.add_argument("--answers-file", type=str, required = True)
     args = parser.parse_args()

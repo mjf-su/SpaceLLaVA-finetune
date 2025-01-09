@@ -3,10 +3,11 @@ from io import BytesIO
 from openai import OpenAI
 from PIL import Image
 from tqdm import tqdm
+from itertools import compress
 
 import pathlib, base64, argparse, json
 import numpy as np
-client = OpenAI(api_key = "<API KEY HERE>")
+client = OpenAI(api_key = "<API_KEY>")
 
 # Function to encode the image
 def encode_image(image: Union[pathlib.Path, np.ndarray]) -> str:
@@ -29,12 +30,9 @@ def main(args : argparse.Namespace) -> None:
     answers_file = pathlib.Path(args.answers_file).expanduser()
     answers_file.parent.mkdir(parents = True, exist_ok = True)
     answers = json.load(open(answers_file, "r")) if answers_file.is_file() else {}
-    for line in tqdm(questions):
+    eval_ids = [args.evaluation_task in line["id"] for line in questions]
+    for line in tqdm(list(compress(questions))):
         idx = line["id"] # unique identifier
-        assert idx in answers # must generate sota zero-shot answers following
-        if args.evaluation_task and args.evaluation_task not in idx: # target a particular task if "evaluation-task" passed
-            continue 
-
         image_file = pathlib.Path(args.image_folder).expanduser() / line["image"]
         qs = answers[idx]["question"]
 
@@ -71,7 +69,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--question-file", type = str, default = "/SpaceLLaVA-finetune/playground/data/ai4mars/vqa/terrain_comparison/eval_dataset.json")
     parser.add_argument("--answers-file", type = str, default = "/SpaceLLaVA-finetune/playground/data/ai4mars/vqa/terrain_comparison/answer.json")
-    parser.add_argument("--evaluation-task", type = str, default = None, help = "the task within the question file, e.g., eval_dataset.json file, you wish to process.")
+    parser.add_argument("--evaluation-task", type = str, required = True, help = "the task within the question file, e.g., eval_dataset.json file, you wish to process.")
     parser.add_argument("--image-folder", type = str, default = "playground/")
     parser.add_argument("--model", type = str, default = "gpt-4o")
     args = parser.parse_args()
